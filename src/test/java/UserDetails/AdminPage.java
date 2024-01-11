@@ -6,7 +6,7 @@ import java.awt.Toolkit;
 import java.awt.datatransfer.StringSelection;
 import java.awt.event.KeyEvent;
 import java.io.FileInputStream;
-import java.time.Duration;
+//import java.time.Duration;
 import java.util.Iterator;
 import java.util.List;
 import java.util.concurrent.TimeUnit;
@@ -16,16 +16,16 @@ import org.apache.poi.ss.usermodel.Workbook;
 import org.apache.poi.xssf.usermodel.XSSFWorkbook;
 import org.openqa.selenium.By;
 import org.openqa.selenium.JavascriptExecutor;
-import org.openqa.selenium.StaleElementReferenceException;
+//import org.openqa.selenium.StaleElementReferenceException;
 import org.openqa.selenium.WebElement;
 import org.openqa.selenium.chrome.ChromeDriver;
-import org.openqa.selenium.support.ui.ExpectedConditions;
-import org.openqa.selenium.support.ui.WebDriverWait;
+//import org.openqa.selenium.support.ui.ExpectedConditions;
+//import org.openqa.selenium.support.ui.WebDriverWait;
 
 
 public class AdminPage {
 
-	ChromeDriver driver= new ChromeDriver();
+	static ChromeDriver driver= new ChromeDriver();
 	public static void main(String[] args) throws Exception{
 		
 		AdminPage a = new AdminPage();
@@ -33,6 +33,7 @@ public class AdminPage {
 		a.PIMDetails();
 		a.AdminDetails();
 //		a.fileRead();
+		a.PunchIN(); a.ProjectInfo();
 		
 		
 	}
@@ -126,14 +127,15 @@ public class AdminPage {
 		WebElement SSN_No= driver.findElement(By.xpath("//*[@id=\"app\"]/div[1]/div[2]/div[2]/div/div/div/div[2]/div[1]/form/div[2]/div[3]/div[1]/div/div[2]/input"));
 		SSN_No.sendKeys("4598 2345");
 		
-		Thread.sleep(2000);
+		Thread.sleep(1000);
 		
 		// SIN Number
 		WebElement SIN_No= driver.findElement(By.xpath("//*[@id=\"app\"]/div[1]/div[2]/div[2]/div/div/div/div[2]/div[1]/form/div[2]/div[3]/div[2]/div/div[2]/input"));
 		SIN_No.sendKeys("000000");
 		
-		Thread.sleep(2000);
+		Thread.sleep(1000);
 		// Nationality
+		
 		driver.findElement(By.xpath("//*[@id=\"app\"]/div[1]/div[2]/div[2]/div/div/div/div[2]/div[1]/form/div[3]/div[1]/div[1]/div/div[2]/div/div/div[1]")).click();
 		
 	    List<WebElement> Nationality=driver.findElements(By.xpath("//div[@role='listbox']//span"));
@@ -159,7 +161,7 @@ public class AdminPage {
 				break;
 			}
 		}
-		Thread.sleep(2000);
+		Thread.sleep(1000);
 				
 		
 		// Date Of Birth
@@ -331,9 +333,8 @@ public class AdminPage {
 		rb.keyRelease(KeyEvent.VK_ENTER);
 		
 		Thread.sleep(2000);
+		
 		// Status
-		
-		
 		driver.findElement(By.xpath("//*[@id=\"app\"]/div[1]/div[2]/div[2]/div/div/form/div[1]/div/div[3]/div/div[2]/div/div")).click();
 		
 		rb.keyPress(KeyEvent.VK_DOWN);
@@ -367,6 +368,184 @@ public class AdminPage {
 		Iterator<Row> rowIterator =sheet.iterator();
 		System.out.println(rowIterator);
 		
+		
+	}
+	
+	@SuppressWarnings("deprecation")
+	public void PunchIN() throws Exception {
+		
+		// TimePage click
+		WebElement Time_Click= driver.findElement(By.xpath("//span[text()='Time']"));
+		Time_Click.click();
+		
+		// Attendance dropdown
+		WebElement attendanceDD=driver.findElement(By.xpath("//span[text()='Attendance ']"));
+		attendanceDD.click();
+		
+		// Employee Records
+		driver.findElement(By.xpath("//a[text()='Employee Records']")).click();
+		
+		//Employee Name
+		driver.findElement(By.xpath("//input[@placeholder='Type for hints...']")).sendKeys("Aishwarya");
+		Thread.sleep(2000);
+		
+		List<WebElement> options= driver.findElements(By.xpath("//div[@role='option']//span"));
+		
+		for(WebElement e: options) {
+			String text=e.getText();
+			if(text.contains("Aishwarya")) {
+				e.click();
+			}
+		}
+		
+		Thread.sleep(1000);
+		
+		// Click View
+		driver.findElement(By.xpath("//*[@id=\"app\"]/div[1]/div[2]/div[2]/div[1]/div[2]/form/div[2]/button")).click();
+		
+		// Click Add
+		driver.findElement(By.xpath("//*[@id=\"app\"]/div[1]/div[2]/div[2]/div[2]/div[1]/button")).click();
+		
+		String Name="Aishwarya Ravichandran";
+		// Punch Note
+		driver.findElement(By.xpath("//*[@id=\"app\"]/div[1]/div[2]/div[2]/div/div/div/form/div[3]/div/div/div/div[2]/textarea")).sendKeys(Name +' '+ " Punch In ");
+		
+		// Punch in click
+		driver.findElement(By.xpath("//div[@class='oxd-layout-container']//button[normalize-space(text()='In')]")).click();
+		
+		driver.manage().timeouts().pageLoadTimeout(5000,TimeUnit.MILLISECONDS);
+		//Attendance click
+		driver.findElement(By.xpath("//*[@id=\"app\"]/div[1]/div[1]/header/div[2]/nav/ul/li[2]/span")).click();
+		
+		// Punch in/out
+		driver.findElement(By.xpath("//a[text()='Punch In/Out']")).click();
+		
+		// Punch Out Note
+		driver.findElement(By.xpath("//*[@id=\"app\"]/div[1]/div[2]/div[2]/div/div/div/form/div[2]/div/div/div/div[2]/textarea")).sendKeys(Name +' '+ " Punch Out ");
+		
+		// Punch Out Click
+		driver.findElement(By.xpath("//*[@id=\"app\"]/div[1]/div[2]/div[2]/div/div/div/form/div[3]/button")).click();
+		
+		
+		
+	}
+	
+	public void ProjectInfo() throws Exception {
+		
+		// click projectinfo 
+		driver.findElement(By.xpath("//*[@id=\"app\"]/div[1]/div[1]/header/div[2]/nav/ul/li[4]/span")).click();
+		
+		// click projects
+		driver.findElement(By.xpath("//a[text()='Projects']")).click();
+		
+		// add option 
+		driver.findElement(By.xpath("//*[@id=\"app\"]/div[1]/div[2]/div[2]/div/div[2]/div[1]/button")).click();
+		
+		// Project Name
+		driver.findElement(By.xpath("//*[@id=\"app\"]/div[1]/div[2]/div[2]/div/div/form/div[1]/div[1]/div/div[2]/input")).sendKeys("Toyoto Financial Service");
+		Thread.sleep(1000);
+		
+		// Add customer
+		driver.findElement(By.xpath("//*[@id=\"app\"]/div[1]/div[2]/div[2]/div/div/form/div[1]/div[2]/button")).click();
+		
+		// Dialog box Name
+		driver.findElement(By.xpath("//*[@id=\"app\"]/div[1]/div[2]/div[2]/div/div[2]/div/div/div/form/div[1]/div/div[2]/input")).sendKeys("Toyoto");
+		
+		// Company Description
+		
+		String Description= "Toyoto Auto Finance Application";
+		driver.findElement(By.xpath("//*[@id=\"app\"]/div[1]/div[2]/div[2]/div/div[2]/div/div/div/form/div[2]/div/div[2]/textarea")).sendKeys(Description);
+		Thread.sleep(1000);
+		
+		//Save
+		driver.findElement(By.xpath("//*[@id=\"app\"]/div[1]/div[2]/div[2]/div/div[2]/div/div/div/form/div[3]/button[2]")).click();
+		
+		// Project Description 
+		String Desc= "Auto Finance Application used to maintain agreements";
+		driver.findElement(By.xpath("//*[@id=\"app\"]/div[1]/div[2]/div[2]/div/div/form/div[2]/div/div[1]/div/div[2]/textarea")).sendKeys(Desc);
+		
+		// Project admin
+		driver.findElement(By.xpath("//*[@id=\"app\"]/div[1]/div[2]/div[2]/div/div/form/div[2]/div/div[2]/div/div/div[2]/div/div/input")).sendKeys("Paul");
+		Thread.sleep(3000);
+		Robot rb= new Robot();
+		rb.keyPress(KeyEvent.VK_DOWN);
+		rb.keyRelease(KeyEvent.VK_DOWN);
+		Thread.sleep(1000);
+		rb.keyPress(KeyEvent.VK_ENTER);
+		rb.keyRelease(KeyEvent.VK_ENTER);
+		
+		Thread.sleep(2000);
+		// Save
+		driver.findElement(By.xpath("//*[@id=\"app\"]/div[1]/div[2]/div[2]/div/div/form/div[3]/button[2]")).click();
+		
+		// Add Activities
+		driver.findElement(By.xpath("//*[@id=\"app\"]/div[1]/div[2]/div[2]/div/div[2]/div[1]/div/button[2]")).click();
+		
+		// Activity 1
+		WebElement activity=driver.findElement(By.xpath("//*[@id=\"app\"]/div[1]/div[2]/div[2]/div/div[2]/div[5]/div/div/div/form/div[1]/div/div[2]/input"));
+		activity.sendKeys("Bug Fix");
+		driver.findElement(By.xpath("//*[@id=\"app\"]/div[1]/div[2]/div[2]/div/div[2]/div[5]/div/div/div/form/div[2]/button[2]")).click();
+		
+		// Activity 2
+		driver.findElement(By.xpath("//*[@id=\"app\"]/div[1]/div[2]/div[2]/div/div[2]/div[1]/div/button[2]")).click();
+		activity.sendKeys("Requirement Gathering");
+		driver.findElement(By.xpath("//*[@id=\"app\"]/div[1]/div[2]/div[2]/div/div[2]/div[5]/div/div/div/form/div[2]/button[2]")).click();
+		
+		// Activity 3
+		driver.findElement(By.xpath("//*[@id=\"app\"]/div[1]/div[2]/div[2]/div/div[2]/div[1]/div/button[2]")).click();
+		activity.sendKeys("Test Case preparation");
+		driver.findElement(By.xpath("//*[@id=\"app\"]/div[1]/div[2]/div[2]/div/div[2]/div[5]/div/div/div/form/div[2]/button[2]")).click();
+		
+		// Activity 4
+		driver.findElement(By.xpath("//*[@id=\"app\"]/div[1]/div[2]/div[2]/div/div[2]/div[1]/div/button[2]")).click();
+		activity.sendKeys("Support and maintanence");
+		driver.findElement(By.xpath("//*[@id=\"app\"]/div[1]/div[2]/div[2]/div/div[2]/div[5]/div/div/div/form/div[2]/button[2]")).click();
+		
+		// Save
+		driver.findElement(By.xpath("//*[@id=\"app\"]/div[1]/div[2]/div[2]/div/div/form/div[3]/button[2]")).click();
+				
+	}
+	
+	public void TimeSheet() throws Exception {
+		
+		// Click Timesheet
+		driver.findElement(By.xpath("//*[@id=\"app\"]/div[1]/div[1]/header/div[2]/nav/ul/li[1]/span")).click();
+		
+		// My Timesheet dropdown 
+		driver.findElement(By.xpath("//a[text()='My Timesheets']")).click();
+		
+		// Edit Button
+		driver.findElement(By.xpath("//*[@id=\"app\"]/div[1]/div[2]/div[2]/div/form/div[3]/div[2]/button[1]")).click();
+		
+		// Delete History
+		driver.findElement(By.xpath("//*[@id=\"app\"]/div[1]/div[2]/div[2]/div/form/div[2]/table/tbody/tr[1]/td[10]/button")).click();
+		
+		// Project Name
+		driver.findElement(By.xpath("//*[@id=\"app\"]/div[1]/div[2]/div[2]/div/form/div[2]/table/tbody/tr[1]/td[1]/div/div[2]/div/div/input")).sendKeys("Toyoto Financial");
+		Thread.sleep(2000);
+		Robot rb= new Robot();
+		rb.keyPress(KeyEvent.VK_DOWN);
+		rb.keyRelease(KeyEvent.VK_DOWN);
+		Thread.sleep(1000);
+		rb.keyPress(KeyEvent.VK_ENTER);
+		rb.keyRelease(KeyEvent.VK_ENTER);
+		
+		Thread.sleep(2000);
+		
+		// Activity dropdown 
+		driver.findElement(By.xpath("//*[@id=\"app\"]/div[1]/div[2]/div[2]/div/form/div[2]/table/tbody/tr[1]/td[2]/div/div[2]/div/div/div[1]")).click();
+		Thread.sleep(1000);
+		
+		List<WebElement> options= driver.findElements(By.xpath("//div[@role='option']//span"));
+		
+		for(WebElement e: options) {
+			String text=e.getText();
+			if(text.contains("Requirement Gathering")) {
+				e.click();
+			}
+		}
+		
+		Thread.sleep(1000);
 		
 	}
 
