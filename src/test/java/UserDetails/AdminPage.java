@@ -32,7 +32,7 @@ public class AdminPage {
 		a.LoginDetails();
 		a.PIMDetails();
 		a.AdminDetails();
-//		a.fileRead();
+
 		a.PunchIN(); a.ProjectInfo();
 		
 		
